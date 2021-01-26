@@ -35,7 +35,6 @@
 ;; numbers are disabled. For relative line numbers, set this to `relative'.
 (setq display-line-numbers-type nil)
 
-
 ;; Here are some additional functions/macros that could help you configure Doom:
 ;;
 ;; - `load!' for loading external *.el files relative to this one
@@ -53,9 +52,56 @@
 ;; You can also try 'gd' (or 'C-c c d') to jump to their definition and see how
 ;; they are implemented.
 
+(use-package! evil-cleverparens
+  :hook (evil-local-mode . evil-cleverparens-mode))
+
 (setq evil-escape-key-sequence "fd")
+
+(setq lsp-clients-angular-language-server-command
+  '("node"
+    "/usr/local/lib/node_modules/@angular/language-server"
+    "--ngProbeLocations"
+    "/usr/local/lib/node_modules"
+    "--tsProbeLocations"
+    "/usr/local/lib/node_modules"
+    "--stdio"))
 
 (map! :leader
       (:prefix-map ("j" . "jump")
        :desc "avy char" "j" #'avy-goto-char
        :desc "avy line" "l" #'avy-goto-line))
+
+(map! :leader
+      :prefix "w"
+      :desc "split window vertically" "/" #'split-window-right
+      :desc "split window horizontally" "-" #'split-window-below)
+
+(map! :leader
+      (:prefix ("e" . "flycheck")
+       :desc "flycheck clear" "c" #'flycheck-clear
+       :desc "flycheck buffer" "b" #'flycheck-buffer
+       :desc "flycheck error list" "l" #'flycheck-list-errors
+       :desc "flycheck next error" "n" #'flycheck-next-error
+       :desc "flycheck previous error" "p" #'flycheck-previous-error))
+
+(setq confirm-kill-emacs nil
+      projectile-project-search-path '("~/projects")
+      lsp-log-info nil                       ;; set to t for debugging lsp
+      read-process-output-max (* 1024 1024)) ;; 1mb
+
+(setq typescript-indent-level 2
+      lsp-ui-sideline-enable nil)
+
+;; if the cider repl history does not work
+;; dont like these actions and they conflict with cider repl
+;; (global-set-key (kbd "C-k") nil)
+;; (global-set-key (kbd "C-j") nil)
+
+;;clojure configs
+(define-key evil-insert-state-map (kbd "C-k") nil)
+(with-eval-after-load "cider-mode"
+  (define-key evil-emacs-state-map (kbd "<up>") 'cider-repl-previous-input)
+  (define-key cider-repl-mode-map (kbd "C-k") 'cider-repl-previous-input)
+  (define-key cider-repl-mode-map (kbd "C-j") 'cider-repl-next-input)
+  (define-key cider-repl-mode-map (kbd "<up>") 'cider-repl-previous-input)
+  (define-key cider-repl-mode-map (kbd "<down>") 'cider-repl-next-input))
