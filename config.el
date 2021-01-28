@@ -55,6 +55,8 @@
 (use-package! evil-cleverparens
   :hook (evil-local-mode . evil-cleverparens-mode))
 
+(add-hook 'org-mode-hook 'turn-on-auto-fill)
+
 (setq evil-escape-key-sequence "fd")
 
 (setq lsp-clients-angular-language-server-command
@@ -91,6 +93,8 @@
 
 (setq typescript-indent-level 2
       lsp-ui-sideline-enable nil)
+
+(setq org-latex-packages-alist '(("" "siunitx" t)))
 
 ;; if the cider repl history does not work
 ;; dont like these actions and they conflict with cider repl

@@ -50,3 +50,5 @@
 ;(unpin! t)
 
 (package! evil-cleverparens)
+
+(package! cdlatex)
